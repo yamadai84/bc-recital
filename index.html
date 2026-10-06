@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Be Color 発表会</title>
+<meta name="theme-color" content="#0047b9">
+<link rel="icon" id="favicon" href="https://prd.resource-api.lit.link/images/creator/XNyQt2UlWWV6aw8MMMFuwbuzKV93/0fa920f0-584c-4e4b-948c-db054d15c463.jpg">
+<link rel="apple-touch-icon" id="touchIcon" href="https://prd.resource-api.lit.link/images/creator/XNyQt2UlWWV6aw8MMMFuwbuzKV93/0fa920f0-584c-4e4b-948c-db054d15c463.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+<script>
+  // ▼ GAS をウェブアプリとしてデプロイしたときの URL を貼り付ける
+  // ロゴ（スプシ「設定」の「ロゴ画像URL」が空のときに使う画像）
+  const DEFAULT_LOGO = 'https://prd.resource-api.lit.link/images/creator/XNyQt2UlWWV6aw8MMMFuwbuzKV93/0fa920f0-584c-4e4b-948c-db054d15c463.jpg';
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbyzlZKs97fBjK9BYYR9TYo1Rrq1uzI_l4fSXKFaP15xYRuxyt7WObGm0nZKOUUWi0P7-A/exec';
+</script>
+<style>
+  :root {
+    --accent:#0047b9;
+    --accent-strong:color-mix(in srgb, var(--accent) 78%, #000);
+    --accent-soft:color-mix(in srgb, var(--accent) 12%, #fff);
+    --bg:color-mix(in srgb, var(--accent) 5%, #fff);
+    --card:#ffffff; --text:#1f2d24; --muted:#66786c;
+    --line:color-mix(in srgb, var(--accent) 14%, #fff);
+    --danger:#d93a2b;
+    --shadow:rgba(0,60,30,.07); --shadow-strong:rgba(0,60,30,.14);
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text);
+         font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans",system-ui,sans-serif;
+         font-weight:500; line-height:1.6; -webkit-text-size-adjust:100%; }
+  a { color:var(--accent-strong); }
+
+  /* ロゴの7色を使った帯 */
+  .rainbow { height:5px; background:linear-gradient(90deg,
+    #d7141a 0 14.3%, #e8920f 0 28.6%, #f2e520 0 42.9%, #1f9446 0 57.1%,
+    #1565ad 0 71.4%, #1e2a78 0 85.7%, #8a1a7e 0); }
+
+  .top { position:sticky; top:0; z-index:2; }
+  header { background:var(--card); border-bottom:3px solid var(--accent); padding:10px 16px;
+           display:flex; gap:10px; align-items:center; }
+  header .logo { height:38px; width:38px; border-radius:50%; object-fit:cover; display:block; flex:none; }
+  header h1 { font-size:18px; margin:0; flex:1; letter-spacing:.04em; min-width:0;
+              white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .badge { font-size:12px; padding:2px 10px; border-radius:99px; background:var(--accent-soft);
+           color:var(--accent-strong); white-space:nowrap; }
+
+  /* 目次 */
+  .toc { background:var(--card); border-bottom:1px solid var(--line); display:flex; gap:6px;
+         padding:8px 16px; overflow-x:auto; scrollbar-width:none; }
+  .toc::-webkit-scrollbar { display:none; }
+  .toc a { flex:none; font-size:13px; text-decoration:none; color:var(--accent-strong);
+           background:var(--accent-soft); padding:4px 12px; border-radius:99px; }
+  .toc a:hover { background:var(--line); }
+
+  main { max-width:680px; margin:0 auto; padding:18px 16px 40px; }
+
+  /* イベント情報 */
+  .hero { background:var(--card); border-radius:18px; overflow:hidden; margin-bottom:22px;
+          box-shadow:0 6px 24px var(--shadow-strong); }
+  .hero-head { background:var(--accent); color:#fff; padding:18px 20px 16px; position:relative; }
+  .hero-head .sub { font-size:12px; opacity:.85; letter-spacing:.08em; }
+  .hero-head h2 { margin:2px 0 0; font-size:22px; line-height:1.4; }
+  .countdown { position:absolute; top:14px; right:16px; background:#fff; color:var(--accent-strong);
+               font-size:12px; font-weight:700; padding:3px 10px; border-radius:99px; }
+  .countdown b { font-size:18px; margin:0 2px; }
+  .hero-head.has-count h2 { padding-right:88px; }
+  .hero-body { padding:6px 20px 14px; }
+  .info { display:flex; gap:12px; padding:10px 0; border-top:1px dashed var(--line); }
+  .info:first-child { border-top:0; }
+  .info .label { flex:none; width:44px; font-size:12px; color:var(--muted); padding-top:2px; }
+  .info .value { font-weight:700; white-space:pre-wrap; word-break:break-word; }
+  .hero-note { margin:4px 0 0; padding:12px 14px; background:var(--accent-soft); border-radius:10px;
+               font-size:14px; white-space:pre-wrap; word-break:break-word; }
+
+  /* セクション */
+  section { scroll-margin-top:110px; margin-bottom:26px; }
+  section h2 { font-size:17px; margin:0 0 10px; padding-left:10px; border-left:5px solid var(--accent);
+               line-height:1.4; }
+
+  /* カード（ボタン／文章） */
+  .card { display:flex; align-items:center; gap:12px; width:100%; margin:0 0 10px;
+          background:var(--card); color:var(--text); border:0; border-radius:14px; padding:14px 14px 14px 16px;
+          border-left:4px solid var(--accent); box-shadow:0 2px 8px var(--shadow);
+          font:inherit; text-align:left; text-decoration:none; }
+  a.card, button.card { cursor:pointer; transition:background .15s, transform .1s; }
+  a.card:hover, button.card:hover { background:var(--accent-soft); }
+  a.card:active, button.card:active { transform:scale(.985); }
+  .card .icon { flex:none; width:40px; height:40px; border-radius:50%; background:var(--accent-soft);
+                display:grid; place-items:center; font-size:20px; }
+  .card .body { flex:1; min-width:0; }
+  .card .title { font-weight:700; font-size:15px; }
+  .card .desc { color:var(--muted); font-size:13px; margin-top:2px; white-space:pre-wrap; word-break:break-word; }
+  .card .go { flex:none; color:var(--accent); }
+  .card .go svg { display:block; }
+  .lock-tag { display:inline-block; font-size:11px; font-weight:700; color:#fff; background:var(--accent);
+              border-radius:6px; padding:0 6px; margin-right:6px; vertical-align:2px; }
+
+  .card.static { border-left-color:var(--line); }
+  .card.static .icon { filter:grayscale(.3); }
+
+  /* 文章 */
+  .text { display:block; border-left-color:var(--line); }
+  .text .title { margin-bottom:4px; }
+  .text .content { font-size:14px; white-space:pre-wrap; word-break:break-word; }
+  .text .content a { word-break:break-all; }
+  .text .content strong { color:var(--accent-strong); }
+
+  /* 画像（チラシなど） */
+  .photo { display:block; margin:0 0 12px; background:var(--card); border-radius:14px; overflow:hidden;
+           box-shadow:0 2px 8px var(--shadow); color:var(--text); text-decoration:none; }
+  .photo img { display:block; width:100%; height:auto; }
+  .photo .cap { padding:10px 14px; font-size:13px; color:var(--muted); white-space:pre-wrap; }
+
+  .loading, .empty { text-align:center; color:var(--muted); padding:48px 0; }
+  .spinner { width:28px; height:28px; margin:0 auto 10px; border-radius:50%;
+             border:3px solid var(--accent-soft); border-top-color:var(--accent); animation:spin 1s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  footer { text-align:center; color:var(--muted); font-size:12px; padding:8px 16px 32px; }
+  footer img { width:88px; height:88px; border-radius:50%; object-fit:cover; display:block; margin:0 auto 8px; }
+
+  /* パスワード入力 */
+  dialog { width:min(360px, calc(100% - 32px)); border:0; border-radius:18px; padding:28px 24px 22px;
+           background:var(--card); color:var(--text); text-align:center;
+           box-shadow:0 6px 24px var(--shadow-strong); }
+  dialog::backdrop { background:rgba(20,35,25,.5); }
+  dialog .lock-big { width:52px; height:52px; margin:0 auto 10px; border-radius:50%; background:var(--accent-soft);
+                     display:grid; place-items:center; font-size:24px; }
+  dialog h3 { font-size:17px; margin:0 0 4px; }
+  dialog p { color:var(--muted); font-size:13px; margin:0 0 16px; }
+  dialog input { width:100%; font:inherit; font-size:16px; color:var(--text); padding:10px 12px;
+                 border:1px solid var(--line); border-radius:10px; background:#fff; text-align:center; }
+  dialog input:focus { outline:2px solid var(--accent-soft); border-color:var(--accent); }
+  .error { color:var(--danger); font-size:13px; min-height:1.4em; margin-top:8px; }
+  .actions { display:flex; gap:8px; margin-top:8px; }
+  .btn { flex:1; font:inherit; font-weight:700; font-size:14px; border:0; border-radius:10px; padding:10px;
+         cursor:pointer; text-align:center; text-decoration:none; background:var(--accent); color:#fff; }
+  .btn:hover { background:var(--accent-strong); }
+  .btn.ghost { background:var(--card); color:var(--muted); border:1px solid var(--line); font-weight:500; }
+  .btn.ghost:hover { background:var(--accent-soft); }
+  .btn:disabled { opacity:.5; cursor:wait; }
+  .hidden { display:none !important; }
+
+  @media (max-width:600px) {
+    header { padding:8px 12px; gap:8px; }
+    header h1 { font-size:15px; }
+    header .logo { height:32px; width:32px; }
+    header .badge { display:none; }
+    .toc { padding:8px 12px; }
+    main { padding:14px 12px 32px; }
+    .hero-head { padding:16px 16px 14px; }
+    .hero-head h2 { font-size:19px; }
+    .hero-body { padding:4px 16px 12px; }
+    section { scroll-margin-top:100px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="rainbow"></div>
+  <header>
+    <img class="logo event-logo" alt="">
+    <h1 id="pageTitle">Be Color 発表会</h1>
+    <span class="badge hidden" id="subtitle"></span>
+  </header>
+  <nav class="toc hidden" id="toc"></nav>
+</div>
+
+<main id="main">
+  <div class="loading"><div class="spinner"></div>読み込み中…</div>
+</main>
+
+<footer>
+  <img class="event-logo" alt="">
+  <div id="updated"></div>
+</footer>
+
+<dialog id="pwDialog">
+  <form id="pwForm">
+    <div class="lock-big">🔒</div>
+    <h3 id="pwTitle"></h3>
+    <p>生徒限定のページです。<br>パスワードを入力してください。</p>
+    <input id="pwInput" type="password" placeholder="パスワード" autocomplete="off" required>
+    <div class="error" id="pwError"></div>
+    <div class="actions">
+      <button type="button" class="btn ghost" id="pwCancel">キャンセル</button>
+      <button type="submit" class="btn" id="pwSubmit">確認する</button>
+    </div>
+  </form>
+  <div id="pwDone" class="hidden">
+    <div class="lock-big">🔓</div>
+    <h3>確認できました</h3>
+    <p>下のボタンからページを開いてください。</p>
+    <div class="actions">
+      <button type="button" class="btn ghost" id="pwClose">閉じる</button>
+      <a class="btn" id="pwOpen" target="_blank" rel="noopener">ページを開く</a>
+    </div>
+  </div>
+</dialog>
+
+<script>
+const CACHE_KEY = 'becolor-recital-data';
+const UNLOCK_KEY = 'becolor-recital-unlocked';
+const $ = (id) => document.getElementById(id);
+const ARROW = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
+
+function storage(fn) { try { return fn(); } catch (e) { return null; } }
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text) e.textContent = text;
+  return e;
+}
+
+// 文章：改行・URLの自動リンク・**太字** に対応
+function richText(src) {
+  const frag = document.createDocumentFragment();
+  const re = /(https?:\/\/[^\s<>"）)」]+)|\*\*([^*\n]+)\*\*/g;
+  let last = 0, m;
+  while ((m = re.exec(src))) {
+    if (m.index > last) frag.append(src.slice(last, m.index));
+    if (m[1]) {
+      const a = el('a', null, m[1]);
+      a.href = m[1]; a.target = '_blank'; a.rel = 'noopener';
+      frag.append(a);
+    } else {
+      frag.append(el('strong', null, m[2]));
+    }
+    last = re.lastIndex;
+  }
+  if (last < src.length) frag.append(src.slice(last));
+  return frag;
+}
+
+// 「2026年 11月7日(土)」などから日付を読み取ってカウントダウン
+function daysUntil(text) {
+  const m = /(\d{4})\D+(\d{1,2})\D+(\d{1,2})/.exec(text || '');
+  if (!m) return null;
+  const target = new Date(+m[1], +m[2] - 1, +m[3]);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round((target - today) / 86400000);
+}
+
+function buildHero(s) {
+  if (!s['イベント名'] && !s['開催日'] && !s['会場'] && !s['ひとこと']) return null;
+  const hero = el('div', 'hero');
+  const head = el('div', 'hero-head');
+  if (s['サブタイトル']) head.append(el('div', 'sub', s['サブタイトル']));
+  head.append(el('h2', null, s['イベント名'] || s['ページタイトル'] || ''));
+
+  const d = daysUntil(s['開催日']);
+  if (d !== null && d >= 0) {
+    const c = el('div', 'countdown');
+    if (d === 0) c.textContent = '本日開催！';
+    else c.innerHTML = 'あと<b>' + d + '</b>日';
+    head.append(c);
+    head.classList.add('has-count');
+  }
+  hero.append(head);
+
+  const body = el('div', 'hero-body');
+  for (const [label, key] of [['日時', '開催日'], ['会場', '会場']]) {
+    if (!s[key]) continue;
+    const row = el('div', 'info');
+    row.append(el('div', 'label', label), el('div', 'value', s[key]));
+    body.append(row);
+  }
+  if (s['ひとこと']) {
+    const note = el('div', 'hero-note');
+    note.append(richText(s['ひとこと']));
+    body.append(note);
+  }
+  hero.append(body);
+  return hero;
+}
+
+// Google ドライブの共有リンクは、そのままでは画像として表示できないので変換する
+function imageSrc(url) {
+  const m = /drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]+)/.exec(url);
+  return m ? 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w1600' : url;
+}
+
+function buildCard(item) {
+  if (item.type === '画像') {
+    if (!item.url) return el('div');
+    const box = el('a', 'photo');
+    box.href = item.url;
+    box.target = '_blank';
+    box.rel = 'noopener';
+    const img = el('img');
+    img.src = imageSrc(item.url);
+    img.alt = item.title || '';
+    img.loading = 'lazy';
+    box.append(img);
+    const cap = [item.title, item.desc].filter(Boolean).join('\n');
+    if (cap) box.append(el('div', 'cap', cap));
+    return box;
+  }
+
+  if (item.type === '文章') {
+    const box = el('div', 'card text');
+    if (item.title) box.append(el('div', 'title', item.title));
+    const content = el('div', 'content');
+    content.append(richText(item.desc || ''));
+    box.append(content);
+    return box;
+  }
+
+  const clickable = item.locked || item.url;
+  const card = el(item.locked ? 'button' : clickable ? 'a' : 'div', clickable ? 'card' : 'card static');
+  if (item.icon) card.append(el('span', 'icon', item.icon));
+  const body = el('div', 'body');
+  const title = el('div', 'title');
+  if (item.locked) title.append(el('span', 'lock-tag', '生徒限定'));
+  title.append(item.title);
+  body.append(title);
+  if (item.desc) body.append(el('div', 'desc', item.desc));
+  card.append(body);
+
+  if (item.locked) {
+    card.type = 'button';
+    card.append(el('span', 'go', '🔒'));
+    card.addEventListener('click', () => openLocked(item));
+  } else if (item.url) {
+    card.href = item.url;
+    card.target = '_blank';
+    card.rel = 'noopener';
+    const go = el('span', 'go');
+    go.innerHTML = ARROW;
+    card.append(go);
+  }
+  return card;
+}
+
+function render(data) {
+  const s = data.settings || {};
+  if (s['テーマ色']) document.documentElement.style.setProperty('--accent', s['テーマ色']);
+
+  const logo = s['ロゴ画像URL'] || DEFAULT_LOGO;
+  document.querySelectorAll('.event-logo').forEach((img) => { if (img.getAttribute('src') !== logo) img.src = logo; });
+  $('favicon').href = logo;
+  $('touchIcon').href = logo;
+
+  const title = s['ページタイトル'] || 'Be Color 発表会';
+  document.title = title;
+  $('pageTitle').textContent = title;
+  $('subtitle').textContent = s['バッジ'] || '';
+  $('subtitle').classList.toggle('hidden', !s['バッジ']);
+
+  const main = $('main');
+  const toc = $('toc');
+  main.replaceChildren();
+  toc.replaceChildren();
+
+  const hero = buildHero(s);
+  if (hero) main.append(hero);
+
+  let section = null;
+  let n = 0;
+  for (const item of data.items || []) {
+    if (item.type === '見出し') {
+      section = el('section');
+      section.id = 'sec-' + (++n);
+      section.append(el('h2', null, item.title));
+      main.append(section);
+      const a = el('a', null, item.title);
+      a.href = '#' + section.id;
+      toc.append(a);
+      continue;
+    }
+    if (!section) { section = el('section'); main.append(section); }
+    section.append(buildCard(item));
+  }
+  toc.classList.toggle('hidden', n < 2);
+
+  if (!data.items || !data.items.length) main.append(el('div', 'empty', 'まだ情報がありません'));
+
+  if (data.updatedAt) {
+    const t = new Date(data.updatedAt);
+    $('updated').textContent = '最終更新：' + t.toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+}
+
+async function load() {
+  const cached = storage(() => JSON.parse(localStorage.getItem(CACHE_KEY)));
+  if (cached) render(cached); // 前回の内容をすぐ表示し、裏で最新を取りに行く
+
+  try {
+    const res = await fetch(GAS_URL, { cache: 'no-store' });
+    const data = await res.json();
+    render(data);
+    storage(() => localStorage.setItem(CACHE_KEY, JSON.stringify(data)));
+  } catch (e) {
+    if (!cached) $('main').replaceChildren(el('div', 'empty', '読み込みに失敗しました。時間をおいて再読み込みしてください。'));
+  }
+}
+
+// ───── パスワード付きリンク ─────
+const dlg = $('pwDialog');
+const form = $('pwForm');
+const input = $('pwInput');
+let current = null;
+
+function unlockedUrls() {
+  return storage(() => JSON.parse(sessionStorage.getItem(UNLOCK_KEY))) || {};
+}
+
+function showDone(url) {
+  form.classList.add('hidden');
+  $('pwDone').classList.remove('hidden');
+  $('pwOpen').href = url;
+}
+
+function openLocked(item) {
+  current = item;
+  $('pwTitle').textContent = item.title;
+  input.value = '';
+  $('pwError').textContent = '';
+  $('pwSubmit').disabled = false;
+  form.classList.remove('hidden');
+  $('pwDone').classList.add('hidden');
+
+  const known = unlockedUrls()[item.id];
+  if (known) showDone(known); // このタブで一度解除済みなら入力を省略
+  dlg.showModal();
+  if (!known) input.focus();
+}
+
+form.addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  $('pwSubmit').disabled = true;
+  $('pwError').textContent = '';
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // プリフライトを避ける
+      body: JSON.stringify({ id: current.id, password: input.value }),
+    });
+    const r = await res.json();
+    if (r.ok && r.url) {
+      const map = unlockedUrls();
+      map[current.id] = r.url;
+      storage(() => sessionStorage.setItem(UNLOCK_KEY, JSON.stringify(map)));
+      showDone(r.url);
+    } else {
+      $('pwError').textContent = r.message || 'パスワードが違います';
+      input.select();
+    }
+  } catch (e) {
+    $('pwError').textContent = '通信に失敗しました。もう一度お試しください。';
+  }
+  $('pwSubmit').disabled = false;
+});
+
+$('pwCancel').addEventListener('click', () => dlg.close());
+$('pwClose').addEventListener('click', () => dlg.close());
+$('pwOpen').addEventListener('click', () => dlg.close());
+dlg.addEventListener('click', (ev) => {
+  if (ev.target !== dlg) return;
+  const r = dlg.getBoundingClientRect();
+  const inside = ev.clientX >= r.left && ev.clientX <= r.right && ev.clientY >= r.top && ev.clientY <= r.bottom;
+  if (!inside) dlg.close(); // 外側（背景）をタップしたら閉じる
+});
+
+document.querySelectorAll('.event-logo').forEach((img) => { img.src = DEFAULT_LOGO; });
+load();
+</script>
+</body>
+</html>
